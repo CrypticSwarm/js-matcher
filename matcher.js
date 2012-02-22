@@ -6,7 +6,7 @@ var m = module.exports =
   }
     
 
-function mapMatch(obj, matchList, defaultVal) {
+function mapMatch(matchList, obj, defaultVal) {
   var i = 0
     , len = matchList.length
   for (; i < len; i++) {
