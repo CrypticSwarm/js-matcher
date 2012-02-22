@@ -54,6 +54,8 @@ match([4, rest], [1, 2, 3, 4])
 
 mapMatch runs through the list and returns the first value of a [pattern, value] where the pattern matches.
 
+#### Examples
+
 ```javascript
 var matcher = require('js-matcher')
   , mapMatch = matcher.mapMatch
