@@ -67,6 +67,18 @@ mapMatch(patterns, { a: 123, b: 454 }, "I wasn't matched") // 'hi there'
 mapMatch(patterns, { d: 83, b: 454 }, "I wasn't matched") // 'b is 454'
 mapMatch(patterns, { a: [1, 2], b: [454] }, "I wasn't matched") // "123's and abc's"
 mapMatch(patterns, { a: [3, 2, 4], b: [454] }, "I wasn't matched") // "I wasn't matched"
+
+
+var matchList =
+  [ [ [0, 0]      , 1]
+  , [ [0, '$v']   , 2]
+  , [ ['$v', '$v'], 3]
+  ]
+
+mapMatch(matchList, [0,0], 4) // 1
+mapMatch(matchList, [0,2], 4) // 2
+mapMatch(matchList, [4,4], 4) // 3
+mapMatch(matchList, [3,2], 4) // 4
 ```
 
 ### rest
