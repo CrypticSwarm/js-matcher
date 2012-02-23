@@ -1,5 +1,6 @@
 var m = module.exports = 
   { match: match
+  , isMatch: isMatch
   , rest: rest
   , mapMatch: mapMatch
   , isVar: isVar
@@ -15,11 +16,17 @@ function mapMatch(matchList, obj, defaultVal) {
   return defaultVal
 }
 
-function match(input, validate, vars, later) {
-  if (vars == null && later == null) {
+function match(pattern, obj) {
+  var vars = {}
+    , matched = isMatch(pattern, obj, vars)
+  return matched ? vars : null
+}
+
+function isMatch(input, validate, vars, later) {
+  if (vars == null || later == null) {
+    vars = vars || {}
     later = {}
-    vars = {}
-    var ret = match(input, validate, vars, later)
+    var ret = isMatch(input, validate, vars, later)
     return Object.keys(later).length > 0 ? false
          : ret
   }
@@ -34,7 +41,7 @@ function match(input, validate, vars, later) {
   else {
     if (m.isVar(input)) {
       if (vars[input]) {
-        return match(vars[input], validate, vars, later)
+        return isMatch(vars[input], validate, vars, later)
       }
       else {
         vars[input] = validate
@@ -42,7 +49,7 @@ function match(input, validate, vars, later) {
       if (later[input]) {
         var ltr = later[input]
         delete later[input]
-        return match(ltr.m[input], ltr.v[vars[input]], vars, later)
+        return isMatch(ltr.m[input], ltr.v[vars[input]], vars, later)
       }
       return true
     }
@@ -57,7 +64,7 @@ function matchArray(obj, validate, vars, later) {
   if (!hasRest && validate.length !== len) return false
   if (hasRest && validate.length < len) return false
   for (; i < len; i++) {
-    if (!match(obj[i], validate[i], vars, later)) return false
+    if (!isMatch(obj[i], validate[i], vars, later)) return false
   }
   return true
 }
@@ -69,13 +76,13 @@ function matchObj(obj, validate, vars, later) {
   for (; i < len; i++) {
     if (m.isVar(keys[i])) {
       if (vars[keys[i]]) { //match now
-        return match(obj[keys[i]], validate[vars[keys[i]]], vars, later)
+        return isMatch(obj[keys[i]], validate[vars[keys[i]]], vars, later)
       }
       else { //not enough info match later
         later[keys[i]] = { m: obj, v: validate }
       }
     }
-    else if (!match(obj[keys[i]], validate[keys[i]], vars, later)) {
+    else if (!isMatch(obj[keys[i]], validate[keys[i]], vars, later)) {
       return false
     }
   }

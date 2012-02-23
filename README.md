@@ -12,14 +12,18 @@ Install via NPM by running
 ## API Docs
 
 
-### match(pattern, obj)
+### isMatch(pattern, obj)
 
 * pattern - the pattern to match against.
 * obj - object to match against the pattern.
 
-Match recursively walks through the pattern space and the object to be matched against checking that each part match.  The pattern space can specify variables that can be matched against multiple times and will only match if the same variable matches itself on every occurance. Variables are specified by a string with '$' as the first character.
+* returns - `true` when obj matches the pattern.  `false` when obj doesn't match the pattern.
+
+isMatch recursively walks through the pattern space and the object to be matched against checking that each part match.  The pattern space can specify variables that can be matched against multiple times and will only match if the same variable matches itself on every occurance. Variables are specified by a string with '$' as the first character.
 
 You can use variables as keys to objects.  Since there could be more than one result with this case the variable needs to be determined. ie. it must appear somewhere else in the pattern that isn't the key to an object.  ( `{ '$a': 1, x: '$a' }` )
+
+*compare with regex `test`*
 
 #### Examples
 
@@ -27,23 +31,48 @@ Ones that will match and return true:
 
 ```javascript
 var matcher = require('js-matcher')
-  , match = matcher.match
+  , isMatch = matcher.isMatch
   , rest = matcher.rest
-match({ a: 1 }, { a: 1})
-match([1,2,3,4], [1,2,3,4])
-match([1, rest], [1, 2, 3, 4])
-match({ a: 1 }, { a: 1, b: 3, c: 3})
-match({ a: '$v', d: [1,2,'$v']}, { a: 1, b: 3, c: 3, d: [1,2,1]})
-match({ '$v': 3, d: [1,2,'$v']}, { a: 1, b: 3, c: 3, d: [1,2,'b']})
-match(['$v',2], [1,2])
+isMatch({ a: 1 }, { a: 1})
+isMatch([1,2,3,4], [1,2,3,4])
+isMatch([1, rest], [1, 2, 3, 4])
+isMatch({ a: 1 }, { a: 1, b: 3, c: 3})
+isMatch({ a: '$v', d: [1,2,'$v']}, { a: 1, b: 3, c: 3, d: [1,2,1]})
+isMatch({ '$v': 3, d: [1,2,'$v']}, { a: 1, b: 3, c: 3, d: [1,2,'b']})
+isMatch(['$v',2], [1,2])
 ```
 
 Ones that will return false:
 
 ```javascript
-match({ a: 2 }, { a: 1})
-match([1,2,7,4], [1,2,3,4])
-match([4, rest], [1, 2, 3, 4])
+isMatch({ a: 2 }, { a: 1})
+isMatch([1,2,7,4], [1,2,3,4])
+isMatch([4, rest], [1, 2, 3, 4])
+```
+
+### match(pattern, obj)
+
+* pattern - the pattern to match against.
+* obj - object to match against the pattern.
+
+* returns - `object` that is the variable bindings when obj matches the pattern.  `null` when obj doesn't match the pattern.
+
+match is very similar to isMatch but instead of returning true or false returns what the variables are bound to in the match.
+
+*compare with regex `exec`*
+
+#### Examples
+
+```javascript
+var matcher = require('js-matcher')
+  , match = matcher.match
+  , rest = matcher.rest
+
+match(['$v',2], [1,2])
+//{ '$v': 1 }
+
+match({ '$v': '$y', $x: [1,2,'$v'], i: '$x'}, { i: 'd', b: [23, 44], a: 3, c: 3, d: [1,2,'b']})
+//{ '$x': 'd', '$v': 'b', '$y': [ 23, 44 ] }
 ```
 
 ### mapMatch(patterns, obj, defaultVal)
