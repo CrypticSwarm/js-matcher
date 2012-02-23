@@ -4,22 +4,44 @@ var m = module.exports =
   , rest: rest
   , mapMatch: mapMatch
   , isVar: isVar
+  , filter: filter
   }
     
 
 function mapMatch(matchList, obj, defaultVal) {
   var i = 0
     , len = matchList.length
+    , filterObj
+    , retVal
   for (; i < len; i++) {
-    if (match(matchList[i][0], obj)) return matchList[i][1]
+    filterObj = matchList[i].length === 3 ? matchList[i][1]
+              : null
+    retVal = matchList[i].length === 3 ? matchList[i][2]
+              : matchList[i][1]
+    if (match(matchList[i][0], obj, filterObj)) return retVal
   }
   return defaultVal
 }
 
-function match(pattern, obj) {
+function match(pattern, obj, filterObj) {
   var vars = {}
     , matched = isMatch(pattern, obj, vars)
+  if (matched && filterObj) matched = filter(filterObj, vars)
   return matched ? vars : null
+}
+
+function filter(filterObj, bindings) {
+  function filterBinding(key, i) {
+    var filterVar = filterObj[key]
+      , bindingsVar = bindings[key]
+    if (Array.isArray(filterVar)) {
+      return filterVar.indexOf(bindingsVar) !== -1
+    }
+    if (typeof filterVar === 'function') {
+      return filterVar(bindingsVar)
+    }
+  }
+  return Object.keys(filterObj).every(filterBinding)
 }
 
 function isMatch(input, validate, vars, later) {
