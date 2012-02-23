@@ -2,7 +2,7 @@
   "author": "Perrin Westrich <crypticswarm@gmail.com> (http://crypticswarm.com)",
   "name": "js-matcher",
   "description": "A basic pattern matcher for JavaScript Objects.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "https://github.com/CrypticSwarm/js-matcher",
   "repository": {
     "type": "git",
