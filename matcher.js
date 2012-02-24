@@ -56,6 +56,9 @@ function isMatch(input, validate, vars, later) {
     return Array.isArray(validate) ? matchArray(input, validate, vars, later)
          : false
   }
+  else if (input == null || validate == null) {
+    return input === validate
+  }
   else if (typeof input === 'object') {
     return typeof validate === 'object' ? matchObj(input, validate, vars, later)
          : false
