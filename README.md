@@ -5,6 +5,8 @@ JS Pattern Matcher is a naive pattern matcher. No special tricks or optimization
 
 The API is currently unstable.
 
+[![Build Status](https://secure.travis-ci.org/CrypticSwarm/js-matcher.png?branch=master)](http://travis-ci.org/CrypticSwarm/js-matcher)
+
 ## Install
 
 Install via NPM by running
