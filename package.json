@@ -9,10 +9,11 @@
     "url": "git://github.com/CrypticSwarm/js-matcher.git"
   },
   "main": "matcher.js",
+  "scripts": { "test": "tap test/*.js" },
   "engines": {
     "node": "~0.6.9"
   },
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": { "tap": "~0.2.3" },
   "optionalDependencies": {}
 }
